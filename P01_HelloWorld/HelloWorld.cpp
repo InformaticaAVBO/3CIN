@@ -25,9 +25,13 @@ bool isPalindrome( string s ) {
 
 int main()
 {
-    cout << isPalindrome("Hello World") << endl;
-    cout << isPalindrome("ciaoaic") << endl;
-    cout << reale2percepita(30,10) << endl;
+    string s = "Sandro";
+    cout << s.length() << endl;
+    string s2 = s;
+    for (int i=0; i<s.length(); i++) {
+        s2[i] = s[s.length()-(i+1)];
+    }
+    cout << s2 << endl;
 
     return 0;
 }
