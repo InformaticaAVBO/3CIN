@@ -7,51 +7,80 @@
 #include <cstring>
 using namespace std;
 
-int find( char c, string s ) {
-    for (int i=0; i<s.length(); i++) {
-        if (s[i]==c) return i;
-    }
-    return -1;
-}
+string alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+string chiave_sostituzione = "QWERTYUIOPASDFGHJKLZXCVBNM";
 
-string cifra_sost( string s ) {
-    string x = "abcdefghijklmnopqrstuvwxyz";
-    string y = "cbafedihglkjonmrqputsxwvzy";
-    for (int i=0; i<s.length(); i++) {
-        int pos = find(s[i], x);
-        if (pos==-1) ........
-    }
-}
-
-string codifica( string s ) {
+string cifra_per_sostituzione( string s, string chiave ) {
     string r = "";
     for (int i=0; i<s.length(); i++) {
         char c = s[i];
-        if ( (c>='A' && c<'Z') || (c>='a' && c<'z') ) c++;
-        else if (c=='Z') c='A';
-        else if (c=='z') c='a';
-        r += c;
+        if ( (c>='A' && c<='Z') ) {
+            c = chiave[c - 'A'];
+        }
+        else if ( (c>='a' && c<='z') ) {
+            c = chiave[c - 'a'] + ('a' - 'A');
+        }
+        r.append(1, c);
     }
     return r;
 }
 
-string decodifica( string s ) {
+string decifra_per_sostituzione( string s, string chiave ) {
     string r = "";
     for (int i=0; i<s.length(); i++) {
         char c = s[i];
-        if ( (c>'A' && c<='Z') || (c>'a' && c<='z') ) c--;
-        else if (c=='A') c='Z';
-        else if (c=='a') c='z';
-        r += c;
+        if ( (c>='A' && c<='Z') ) {
+            size_t index = chiave.find(c);
+            if (index != string::npos) {
+                c = 'A' + index;
+            }
+        }
+        else if ( (c>='a' && c<='z') ) {
+            size_t index = chiave.find(c - ('a' - 'A'));
+            if (index != string::npos) {
+                c = 'a' + index;
+            }
+        }
+        r.append(1, c);
     }
     return r;
+}
+
+string cifra_a_rotazione( string s, int k ) {
+    string r = "";
+    for (int i=0; i<s.length(); i++) {
+        char c = s[i];
+        if ( (c>='A' && c<='Z') ) {
+            c = 'A' + ( (c - 'A' + k) % 26 );
+        }
+        else if ( (c>='a' && c<='z') ) {
+            c = 'a' + ( (c - 'a' + k) % 26 );
+        }
+        r.append(1, c);
+    }
+    return r;
+}
+
+string decifra_a_rotazione( string s, int k ) {
+    return cifra_a_rotazione( s, 26 - (k % 26) );
 }
 
 int main()
 {
-    string str = codifica("CiaoZz4,");
-    cout << str << endl;
-    cout << decodifica(str) << endl;
+    string str;
+    cout << "Inserisci una stringa: ";
+    getline(cin, str);
+    cout << "Inserisci un intero: ";
+    int k;
+    cin >> k;
 
+    string res = cifra_a_rotazione(str, k);
+    cout << res << endl;
+    cout << decifra_a_rotazione(res, k) << endl;
+
+    string res2 = cifra_per_sostituzione(str, chiave_sostituzione);
+    cout << res2 << endl;
+    cout << decifra_per_sostituzione(res2, chiave_sostituzione) << endl;
+    
     return 0;
 }
